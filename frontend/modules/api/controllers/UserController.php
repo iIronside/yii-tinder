@@ -12,12 +12,19 @@ class UserController extends ApiController
 {
     public $modeClass = User::class;
 
-    public function verbs(): array
+    public function behaviors() : array
     {
-        return [
-            'login' => ['GET'],
-            'create' => ['POST'],
-        ];
+        $behaviors = parent::behaviors();
+
+        $behaviors['verbs'] = [
+                'class' => \yii\filters\VerbFilter::class,
+                'actions' => [
+                    'login' => ['GET'],
+                    'create' => ['POST'],
+                ],
+            ];
+
+        return $behaviors;
     }
 
     public function actionLogin($email, $password): array

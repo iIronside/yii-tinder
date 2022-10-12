@@ -2,7 +2,6 @@
 
 namespace frontend\modules\api\models;
 
-use udokmeci\yii2PhoneValidator\PhoneValidator;
 use Yii;
 use yii\base\Model;
 use common\models\User;
@@ -16,6 +15,8 @@ class SignupForm extends Model
     public $email;
     public $password;
     public $phone;
+
+    const EXPIRE_TIME = 604800; // token expiration time, valid for 7 days
 
 
     /**
@@ -37,10 +38,6 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
-
-//            ['phone', 'trim'],
-//            ['phone', 'required'],
-//            ['phone', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Invalid phone number'],
 
             ['phone', 'required'],
             ['phone', 'filter', 'filter' => 'trim'],
@@ -67,6 +64,9 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
+
+        $user->access_token = Yii::$app->security->generateRandomString();
+        $user->access_token_expired_at = date('Y-m-d', time() + static::EXPIRE_TIME);
 
         return $user->save(); //  $this->sendEmail($user)
     }
