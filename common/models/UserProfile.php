@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "user_profile".
@@ -20,6 +21,11 @@ use Yii;
  */
 class UserProfile extends \yii\db\ActiveRecord
 {
+    public $image;
+
+    const GENDER_WOMAN = 20;
+    const GENDER_MAN = 30;
+
     /**
      * {@inheritdoc}
      */
@@ -35,11 +41,17 @@ class UserProfile extends \yii\db\ActiveRecord
     {
         return [
             [['gender', 'looking_for', 'user_id', 'city_id'], 'integer'],
-            [['user_id', 'city_id'], 'required'],
+            [['gender', 'looking_for'], function ($attribute) {
+                if (!in_array($this->$attribute, [self::GENDER_WOMAN, self::GENDER_MAN])) {
+                    $this->addError($attribute, 'Invalid gender!');
+                }
+            }],
+            [['user_id', 'city_id', 'gender', 'looking_for'], 'required'],
             [['name'], 'string', 'max' => 64],
             [['photo'], 'string', 'max' => 255],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            ['user_id', 'unique', 'message'=>'Профиль уже существует']
         ];
     }
 
