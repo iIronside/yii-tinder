@@ -8,7 +8,6 @@ class User extends \common\models\User
     {
         return [
             'id',
-            'username',
             'email',
             'access_token',
             'access_token_expired_at'

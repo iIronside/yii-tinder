@@ -52,7 +52,7 @@ class UserController extends ApiController
         if ($signupFormModel->signup()) {
             $response = ResponseService::successResponse(
                 'You are now a member!',
-                User::findByUsername($signupFormModel->username)
+                User::findByEmail($signupFormModel->email)
             );
         } else {
             Yii::$app->response->statusCode = 400;

@@ -13,7 +13,6 @@ use yii\web\UnauthorizedHttpException;
  * User model
  *
  * @property integer $id
- * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $verification_token
@@ -104,10 +103,10 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $username
      * @return static|null
      */
-    public static function findByUsername($username)
-    {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
-    }
+//    public static function findByUsername($username)
+//    {
+//        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+//    }
 
     /**
      * Finds user by username
